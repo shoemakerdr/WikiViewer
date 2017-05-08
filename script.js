@@ -1,45 +1,73 @@
-/*
-TODO:
 
-event listeners
-- when input is in focus
-	- keypress for user input
-	- keydown for return key (event.keyCode === 13)
-	- remove above events when input is blurred
-- click on suggestion element
-- click on result element
+const WikiApp = (function () {
 
-render
-- suggestion elements when keypress
-- results elements when keydown return key or user clicks on a suggestion element
-
-http request for https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search={USER INPUT}
-
-Getting error on getResults call
-- No 'Access-Control-Allow-Origin' header is present on the requested resource.
-	Origin 'null' is therefore not allowed access.
-- must use JSONP or CORS to do cross-site requests
-	- https://www.html5rocks.com/en/tutorials/cors/
-	- https://www.mediawiki.org/wiki/API:Cross-site_requests
-	- https://www.mediawiki.org/wiki/Manual:CORS
-
-*/
-
-
-
-const WikiApp = (function() {
-	const input = document.getElementsByTagName('input')[0];
-
-	function getResults(term) {
-		const url = "https://en.wikipedia.org/w/api.php?format=json&action=opensearch&search=" +
-			term;
-		const search = new XMLHttpRequest;
-		search.addEventListener("load", () => {
-			const results = this.responseText;
-			console.log(results);
-		});
-		search.open("GET", url, true);
-		search.send();
-	}
+  document.addEventListener("DOMContentLoaded", function() {
+  
+    const input = document.getElementById("input");
+    const results = document.getElementById("results");
+    // all buttons except for first which is link to random article
+    const buttons = Array.prototype.slice.apply(document.getElementsByTagName("button")).slice(1);
+    let tempscript = null;
+    let timeout;
+    
+    function startQuery() {
+      if (input.value.length === 0)
+        clearButtons();
+      clearTimeout(timeout);
+      timeout = setTimeout(startFetch, 250);
+    }
+    
+    function startFetch() {
+      tempscript = document.createElement("script");
+      tempscript.src = "http://en.wikipedia.org/w/api.php"
+        + "?action=opensearch"
+        + "&format=json&callback=onFetchComplete"
+        + "&search=" + input.value;
+      document.body.appendChild(tempscript);
+      // onFetchComplete invoked when finished through JSONP
+    }
+    
+    // onFetchComplete must be global to be used as JSONP callback
+    window.onFetchComplete = function onFetchComp(data) {
+      renderButtons(data);
+      document.body.removeChild(tempscript);
+      tempscript = null;
+    };
+    
+    // clears button node
+    function clearButtons() {
+      buttons.forEach(button => {
+        button.innerHTML = "";
+        button.removeAttribute("onclick");
+      });
+      results.style.display = "none";
+    }
+    
+    function renderButtons(data) {
+      buttons.forEach((button, i) => {
+        if (!data[1][i])
+          button.style.display = "none";
+        else {
+          button.style.display = "";
+          const wrapper = document.createElement("div");
+          const title = document.createElement("h3");
+          const description = document.createElement("p");
+          
+          title.textContent = data[1][i];
+          description.textContent = data[2][i];
+          wrapper.appendChild(title);
+          wrapper.appendChild(description);
+          button.innerHTML = "";
+          button.appendChild(wrapper);
+          button.onclick = function() { window.open(data[3][i], "_blank"); };
+        }
+      });
+      if (results.style.display === "none") 
+        results.style.display = "";
+    }
+    
+    input.addEventListener("input", startQuery);
+  
+  });
 
 })();
