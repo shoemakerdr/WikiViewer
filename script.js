@@ -48,7 +48,7 @@ const WikiApp = (function () {
         if (!data[1][i])
           button.style.display = "none";
         else {
-          button.style.display = "";
+          button.style.display = "block";
           const wrapper = document.createElement("div");
           const title = document.createElement("h3");
           const description = document.createElement("p");
