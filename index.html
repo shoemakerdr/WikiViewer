@@ -3,15 +3,16 @@
 	<head>
 		<meta charset="utf-8">
 		<script type="text/javascript" src="script.js"></script>
-    <link href="style.css" rel="stylesheet" type="text/css"/>	
+    	<link href="style.css" rel="stylesheet" type="text/css"/>
+    	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 		<title>Wikipedia Viewer</title>
 	</head>
 	<body>
-    <h1>Wikipedia Viewer</h1>
-    <section>
-      <button id="random" onclick="window.open('https://en.wikipedia.org/wiki/Special:Random', '_blank')">Random Article</button>
-      <input id="input" type="text" name="search" placeholder="Type to search for article...">
-    </section>
+    <header>
+		<h1>Wikipedia Viewer</h1>
+      	<button onclick="window.open('https://en.wikipedia.org/wiki/Special:Random', '_blank')">Random Article</button>
+      	<input id="input" type="text" name="search">
+    </header>
 		<div id="results">
 			<button></button>
 			<button></button>
