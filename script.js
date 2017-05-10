@@ -19,7 +19,7 @@ const WikiApp = (function () {
 
     function startFetch() {
       tempscript = document.createElement("script");
-      tempscript.src = "http://en.wikipedia.org/w/api.php"
+      tempscript.src = "https://en.wikipedia.org/w/api.php"
         + "?action=opensearch"
         + "&format=json&callback=onFetchComplete"
         + "&search=" + input.value;
