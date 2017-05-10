@@ -1,0 +1,16 @@
+h1 {
+  font-size: 3em;
+}
+
+button {
+  display:block;
+}
+
+#results button {
+  display: none;
+  margin-top: 1em;
+}
+
+input {
+  margin-top: 3em;
+}
